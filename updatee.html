@@ -9,20 +9,13 @@
     <a href="#" onclick="f()">Login with Amazon</a>
     <script>
         function next() {
-            w.location.replace('http://www.google.com/csi');
-        }
+               w.location.replace('http://www.google.com/csi');
+              }
       
         function f() {
-            w = window.open("javascript:document.write(javascript:prompt(1));location='http://amazon.com'","new","width=500,height=500");
-            i = setInterval(function() {
-                try { 
-                    x = w.location.href; 
-                } catch(e) { 
-                    clearInterval(i); 
-                    next(); 
-                }
-            }, 1);
-        }
-    </script>
+            w = window.open("javascript:prompt('Masukkan sesuatu:');document.write('testing');location='http://amazon.com'","new","width=500 height=500");
+            i = setInterval("try { x = w.location.href; } catch(e) { clearInterval(i); next(); }", 1); 
+            }
+      </script>
 </body>
 </html>

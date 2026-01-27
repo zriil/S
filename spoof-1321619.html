@@ -1,0 +1,16 @@
+<script>
+function go(e){
+ e.dataTransfer.setData("Text");
+}
+function fakeload(){
+document.body.setAttribute('style','background-color:black; color:red;');
+document.body.innerHTML = '<center><h1 style="font-size: 80px;">Welcome to Google.com! :D</h1></center>';
+
+}
+</script>
+<body>
+<center>
+<div ondragend="fakeload();" draggable=true ondragstart="event.dataTransfer.setData('text/plain','\u04bbttps://www.google.com.br/');">
+<h1>Drag&Drop to the URL Bar.</h1>
+</div>
+</center>
